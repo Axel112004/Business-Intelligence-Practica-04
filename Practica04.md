@@ -251,7 +251,7 @@ Las consultas muestran cómo una misma tabla de hechos puede analizarse por cate
 **Datos originales:**
 
 - [Catálogo de productos](datos/products.csv)
-- [Datos de ventas desnormalizados](datos/Tabla_Desnormalizada_Ventas.csv)
+
 
 ## 9. Referencias
 
