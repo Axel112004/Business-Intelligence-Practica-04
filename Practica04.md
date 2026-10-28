@@ -7,7 +7,6 @@
 **Integrantes:**  
 **Fecha:** octubre de 2026  
 **Herramientas utilizadas:** PostgreSQL 17, pgAdmin 4, SQL, Markdown y GitHub.  
-**Diagrama en Power Pivot:** pendiente de incorporación por el integrante encargado.
 
 ## 1. Introducción
 
