@@ -4,18 +4,14 @@
 **Asignatura:** Business Intelligence  
 **Práctica 4:** Implementación física de una dimensión para un modelo estrella en PostgreSQL
 
-**Integrantes:** [Escribir los nombres de los integrantes]  
+**Integrantes:**  
 **Fecha:** octubre de 2026  
 **Herramientas utilizadas:** PostgreSQL 17, pgAdmin 4, SQL, Markdown y GitHub.  
 **Diagrama en Power Pivot:** pendiente de incorporación por el integrante encargado.
 
-> **Sobre las evidencias:** este informe se ha elaborado con los **scripts y las cinco capturas reales compartidas por el grupo**. Los valores que se describen en las preguntas son los que aparecen en pgAdmin, incluso cuando se detectó una inconsistencia con el archivo CSV de ventas. No se sustituyeron las respuestas por otras consultas ni se simularon capturas.
-
 ## 1. Introducción
 
 En esta práctica trabajamos con PostgreSQL y pgAdmin 4 para organizar datos de productos y ventas en un modelo dimensional. Partimos de tablas de preparación (*staging*), donde recibimos los archivos CSV; luego usamos tablas de dimensiones para describir productos, clientes y fechas, y una tabla de hechos para almacenar las transacciones de ventas. Finalmente, realizamos cinco consultas SQL para analizar los datos desde diferentes puntos de vista.
-
-Tomamos como referencia de **estructura del informe** la [Práctica 04 del repositorio de Business Intelligence de domdume](https://github.com/domdume/Business-Intelligence/blob/main/Practica%2004/Practica04.md), pero los scripts, nombres de tablas, capturas y resultados que se presentan aquí corresponden a nuestro grupo.
 
 ## 2. Objetivos
 
@@ -54,7 +50,6 @@ En las capturas se observan estas seis tablas bajo **Schemas → public → Tabl
 
 **Claves y relaciones utilizadas:** `fact_sales.product_key` se relaciona con `dim_product.product_key`; `fact_sales.customer_key` con `dim_customer.customer_key`; y las claves `order_date_key` y `ship_date_key` se relacionan con `dim_date.date_key` para representar la fecha de pedido y la fecha de envío.
 
-**Detalle técnico:** en nuestro script, `dim_product.product_key` es `INT PRIMARY KEY` y los valores se cargan desde `stg_ventas`. Esto difiere del ejemplo de la guía, que propone `BIGSERIAL` para la clave sustituta de la dimensión creada desde `products.csv`. Lo dejamos indicado porque así está implementado el trabajo recibido.
 
 ### 4.2. Importación a staging
 
@@ -69,8 +64,6 @@ Las tablas de preparación se utilizan para recibir los archivos de origen. En p
 | Separador | `,` | `;` |
 
 La tabla `stg_products` tiene las columnas `product_id`, `product_name`, `category` y `subcategory`, en el mismo orden en que aparecen los campos del CSV; aunque el encabezado original del archivo puede usar otros nombres, se debe conservar el orden al importar.
-
-> **Evidencia aún no proporcionada:** el grupo compartió las cinco capturas de resultados, pero no una captura de la ventana de configuración de importación. Si la profesora exige documentarla visualmente, hay que incorporarla antes de entregar.
 
 ### 4.3. Limpieza y carga (DML)
 
@@ -115,24 +108,11 @@ customer_key (PK)       sales_id (PK)        date_key (PK)
 
 **Diagrama del modelo estrella en Power Pivot:**
 
-> 📷 **[ESPACIO PARA INSERTAR LA CAPTURA DEL DIAGRAMA DE POWER PIVOT]**
->
-> Cuando el compañero entregue la imagen, guardarla con el nombre `power_pivot.png` en la carpeta `capturas/` y reemplazar este recuadro por la siguiente línea de Markdown:
->
-> `![Diagrama de relaciones del modelo estrella en Power Pivot](capturas/power_pivot.png)`
+<img width="1065" height="395" alt="image" src="https://github.com/user-attachments/assets/49593636-9c9f-466d-a3a5-73701d870ac9" />
 
 **Descripción de las relaciones observadas:**
 
-> ✍️ **[PENDIENTE]** Añadir una breve explicación de las tablas que se muestran en el diagrama, sus claves y cómo se relacionan con la tabla de hechos. Verificar que coincida con el modelo realmente construido en Power Pivot; no dar por hecho que será idéntico al de PostgreSQL.
-
-**Responsable:** integrante encargado de Power Pivot. **Estado:** pendiente.
-
----
-
 ## 5. Preguntas de análisis y resultados SQL
-
-Las cinco preguntas de la guía piden **realizar consultas a las tablas, presentar el resultado de pgAdmin y explicar brevemente lo que se observa**. A continuación se incluyen las consultas **sin modificarlas** respecto al archivo [`preguntas.sql`](sql/preguntas.sql) que nos compartieron.
-
 ### 5.1. ¿Cuántas ventas se realizaron por categoría de producto y mes?
 
 Esta pregunta busca conocer cuántas transacciones se registraron en cada categoría y en cada mes. Se utilizan `COUNT(f.sales_id)` para contar las ventas y `SUM(f.quantity)` para calcular la cantidad total de unidades. La consulta relaciona la tabla de hechos `fact_sales` con la dimensión `dim_product` mediante `product_key`.
@@ -151,7 +131,8 @@ ORDER BY anio_mes, p.category;
 
 **Captura 1. Consulta de ventas por categoría y mes**
 
-![Consulta 1: ventas por categoría y mes en pgAdmin](capturas/pregunta_01.jpeg)
+<img width="875" height="492" alt="image" src="https://github.com/user-attachments/assets/184358d4-10d5-4235-9f3f-b94bb8375c5f" />
+
 
 **Resultado e interpretación:** pgAdmin muestra **79 filas** agrupadas por categoría y período `YYYYMM`. En las filas visibles se encuentran categorías como *Fruits & Vegetables*, *Snacks & Branded Foods* y *Foodgrains, Oil & Masala*. Las columnas `total_ventas_transacciones` y `cantidad_total` permiten diferenciar el número de operaciones de las unidades vendidas. Por ejemplo, en el período `202202` aparece una fila de *Foodgrains, Oil & Masala* con **2 transacciones y 5 unidades**.
 
@@ -172,7 +153,8 @@ ORDER BY ingreso_total DESC;
 
 **Captura 2. Ingreso total por cliente y género**
 
-![Consulta 2: ingreso por cliente y género en pgAdmin](capturas/pregunta_02.jpeg)
+<img width="875" height="492" alt="image" src="https://github.com/user-attachments/assets/969d46fe-5caf-4639-be52-1f3a947462ba" />
+
 
 **Resultado e interpretación:** la captura contiene **10 clientes**. El cliente **1022**, registrado con género **M**, presenta el mayor ingreso, con **11.656**. Después aparece el cliente **1007**, de género **F**, con **9.928**, seguido del cliente **1043**, también de género **F**, con **9.511**. La consulta ayuda a identificar cuáles clientes registran los mayores montos de compras.
 
@@ -193,7 +175,8 @@ ORDER BY cantidad_total_vendida DESC;
 
 **Captura 3. Cantidad total vendida por producto**
 
-![Consulta 3: cantidad total vendida por producto en pgAdmin](capturas/pregunta_03.jpeg)
+<img width="875" height="492" alt="image" src="https://github.com/user-attachments/assets/cf49c543-d7db-479e-a559-d30e9f3e6dc6" />
+
 
 **Resultado e interpretación:** la captura muestra **9 productos**. El primero es **P0126 — Noodles - Fiery Chilli (Top Ramen)**, con **60 unidades**. Le sigue **P0148 — Sweet Chilli Tortilla Chips (Doritos)** con **41**, y el producto **P0125** con **39** unidades. Esta consulta permite identificar los productos con mayor movimiento en cantidad, sin confundir ese indicador con el dinero ingresado.
 
@@ -212,7 +195,8 @@ ORDER BY mes_envio;
 
 **Captura 4. Cantidad enviada por mes**
 
-![Consulta 4: cantidad enviada por mes en pgAdmin](capturas/pregunta_04.jpeg)
+<img width="875" height="492" alt="image" src="https://github.com/user-attachments/assets/0b5d36ca-27ee-45a7-8038-e4ca3130b4e9" />
+
 
 **Resultado e interpretación:** pgAdmin presenta **41 filas** correspondientes a períodos de envío. En la captura se observa, por ejemplo, que en `202212` se registran **18 unidades**, mientras que en `202401` se registran **14 unidades**. Ordenar por `mes_envio` facilita comparar las cantidades de un mes a otro sin mezclar años distintos.
 
@@ -234,7 +218,8 @@ ORDER BY total_vendido DESC;
 
 **Captura 5. Total vendido por tamaño y estado civil**
 
-![Consulta 5: ventas por tamaño y estado civil en pgAdmin](capturas/pregunta_05.jpeg)
+<img width="875" height="492" alt="image" src="https://github.com/user-attachments/assets/7a2b2c9d-cccc-429d-84d8-318ba27fc84d" />
+
 
 **Resultado e interpretación:** la consulta devuelve **6 combinaciones**. En las primeras posiciones aparecen **Large / Married** con **279.604**, **Medium / Married** con **254.137** y **Medium / Single** con **115.183**. Los valores mostrados son los obtenidos realmente en la ejecución compartida por el equipo.
 
@@ -268,14 +253,6 @@ Las consultas muestran cómo una misma tabla de hechos puede analizarse por cate
 
 - [Catálogo de productos](datos/products.csv)
 - [Datos de ventas desnormalizados](datos/Tabla_Desnormalizada_Ventas.csv)
-
-**Capturas originales:**
-
-- [Pregunta 1](capturas/pregunta_01.jpeg)
-- [Pregunta 2](capturas/pregunta_02.jpeg)
-- [Pregunta 3](capturas/pregunta_03.jpeg)
-- [Pregunta 4](capturas/pregunta_04.jpeg)
-- [Pregunta 5](capturas/pregunta_05.jpeg)
 
 ## 9. Referencias
 
