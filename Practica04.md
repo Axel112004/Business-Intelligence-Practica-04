@@ -4,6 +4,7 @@
 **Asignatura:** Business Intelligence  
 **Práctica 4:** Implementación física de una dimensión para un modelo estrella en PostgreSQL
 
+**Integrantes:** Marco Ríos, Dilan Real, Javier Guallichico y Axel Manotoa  
 **Fecha:** octubre de 2026  
 **Herramientas utilizadas:** PostgreSQL 17, pgAdmin 4, SQL, Markdown y GitHub.  
 
@@ -100,15 +101,17 @@ customer_key (PK)       sales_id (PK)        date_key (PK)
 
 **Tabla de hechos:** `fact_sales` concentra las operaciones, con la cantidad (`quantity`), el monto (`sales_amount`), el precio unitario (`unit_price`) y el costo del producto (`product_cost`). **Dimensiones:** `dim_product` sirve para identificar y agrupar productos, `dim_customer` para analizar características de clientes y `dim_date` para fechas. En el modelo SQL hay tres dimensiones y una tabla de hechos; `stg_products` y `stg_ventas` son tablas de preparación.
 
-### 4.5. Diagrama del modelo estrella en Power Pivot
+### 4.5. Modelo estrella en Power Pivot
 
-El modelo dimensional se representa gráficamente en Power Pivot para identificar las tablas y sus relaciones. La tabla `fact_sales` se conecta con `dim_product` mediante `product_key` y con `dim_customer` mediante `customer_key`. Por su parte, `dim_date` permite trabajar con las fechas de pedido y envío a través de `order_date_key` y `ship_date_key`.
+Para representar las relaciones entre los datos se utilizó Excel con Power Pivot. El archivo **Modelo_Estrella_Ventas.xlsx** contiene un modelo de datos y las consultas **Ventas_Origen**, **Dim_Cliente**, **Dim_Fecha**, **Dim_Producto** y **Fact_Ventas**, que permiten separar la información original de las tablas destinadas al análisis.
 
-**Figura 1. Diagrama del modelo dimensional en Power Pivot**
+En el modelo estrella, **Fact_Ventas** concentra las operaciones y sus medidas, mientras que **Dim_Producto**, **Dim_Cliente** y **Dim_Fecha** proporcionan los atributos para filtrar y agrupar los resultados. Así, se pueden analizar las ventas por producto, características del cliente y fechas sin repetir todos los datos descriptivos en cada transacción.
 
-<img width="1065" height="395" alt="Diagrama del modelo dimensional en Power Pivot" src="https://github.com/user-attachments/assets/49593636-9c9f-466d-a3a5-73701d870ac9" />
+**Figura 1. Modelo dimensional representado en Power Pivot**
 
-La representación facilita entender cómo las medidas de ventas se relacionan con los atributos de productos, clientes y fechas. De esta manera, se pueden realizar agrupaciones y filtros sin almacenar toda la información descriptiva en la tabla de hechos.
+<img width="1065" height="395" alt="Diagrama del modelo estrella en Power Pivot" src="https://github.com/user-attachments/assets/49593636-9c9f-466d-a3a5-73701d870ac9" />
+
+La representación visual facilita identificar la función de cada tabla y comprender cómo las dimensiones se relacionan con las ventas. Este diseño sirve como base para las consultas SQL desarrolladas en la práctica.
 
 ## 5. Preguntas de análisis y resultados SQL
 ### 5.1. ¿Cuántas ventas se realizaron por categoría de producto y mes?
